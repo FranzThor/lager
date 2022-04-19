@@ -1,19 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import warehouse from './assets/warehouse.jpg';
-import Stock from './components/Stock.tsx';
+import sailboat from './assets/sailboat.jpg';
+import Stock from './components/Stock';
 
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.base}>
-        {/* <Text>Open up App.tsx to start working on your app!</Text> */}
-        <Text style={{color: '#33c', fontSize: 42}}>Lager-Appen</Text>
-        <Image source={warehouse} style={{ width: 320, height: 240 }} />
+      <ScrollView style={styles.base}>
+        <Text style={styles.header}>Infinity Warehouses</Text>
+        <Image source={sailboat} style={{ width: '100%', height: 150, alignSelf: 'center' }} />
         <Stock />
         <StatusBar style="auto" />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -21,12 +20,15 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   base: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f1f1f1'
+    backgroundColor: '#e7eff6',
+  },
+  header: {
+    fontSize: 36,
+    paddingBottom: 5,
+    textAlign: 'center',
+    color: '#2a4d69',
   }
 });
