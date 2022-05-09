@@ -2,40 +2,39 @@ import { Text, StyleSheet, View } from 'react-native';
 import { useState, useEffect } from 'react';
 import config from "../config/config.json" 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { StockList } from '../styles';
+import itemModel from '../models/items'
 
-export default function Stock() {
+export default function Stock({items, setItems}) {
 
     return (
         <View>
-            <Text style={style.header}>Lagerförteckning</Text>
-            <ItemList />
+            <Text style={StockList.header}>Lagerförteckning</Text>
+            <ItemList items={items} setItems={setItems} />
         </View>
     )
 }
 
-function ItemList() {
-    const [items, setItems] = useState([]) as any;
+function ItemList({items, setItems}) {
 
-    useEffect(() => {
-        fetch(`${config.base_url}/products?api_key=${config['api-key']}`)
-            .then(response => response.json())
-            .then(result => setItems(result.data))
-    })
+    useEffect(async () => {
+        setItems(await itemModel.getItems())
+    }, []);
 
     const names = items.map((item, index) => 
-        <Text key={index} style={style.names}>
+        <Text key={index} style={StockList.names}>
             { item.name }
         </Text>
     )
 
     const stock = items.map((item, index) =>
-        <Text key={index} style={style.stock}>
+        <Text key={index} style={StockList.stock}>
             { item.stock } st
         </Text>, 
     )
 
     return (
-        <View style={style.container}>
+        <View style={StockList.container}>
             <View>
                 {names}
             </View>
@@ -45,38 +44,3 @@ function ItemList() {
         </View>
     )
 }
-
-const style = StyleSheet.create({
-    header: {
-        alignSelf: 'center',
-        fontSize: 24,
-        paddingBottom: 12,
-        paddingTop: 24,
-        color: '#2a4d69'
-    },
-    container: {
-        flexDirection: 'row',
-        alignSelf: 'center',
-        borderStyle: 'solid',
-        borderWidth: 1,
-        padding: 5,
-        marginBottom: 15,
-        backgroundColor: '#adcbe3'
-    },
-    names: {
-        paddingRight: 20,
-        borderBottomWidth: 1,
-        borderColor: '#fff',
-        paddingBottom: 12,
-        paddingTop: 4,
-        fontWeight: 'bold'
-    },
-    stock: {
-        textAlign: 'right',
-        paddingLeft: 100,
-        borderBottomWidth: 1,
-        borderColor: '#fff',
-        paddingBottom: 12,
-        paddingTop: 4,
-    }
-});

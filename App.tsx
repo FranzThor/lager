@@ -1,34 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
-import { Image, StyleSheet, Text, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import sailboat from './assets/sailboat.jpg';
-import Stock from './components/Stock';
+import { Ionicons } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Home from "./components/Home";
+import Pick from "./components/Pick";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Base } from './styles'
 
-export default function App() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.base}>
-        <Text style={styles.header}>Infinity Warehouses</Text>
-        <Image source={sailboat} style={{ width: '100%', height: 150, alignSelf: 'center' }} />
-        <Stock />
-        <StatusBar style="auto" />
-      </ScrollView>
-    </SafeAreaView>
-  );
+const Tab = createBottomTabNavigator();
+const routeIcons = {
+    "Lager": "home",
+    "Plock": "list"
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  base: {
-    flex: 1,
-    backgroundColor: '#e7eff6',
-  },
-  header: {
-    fontSize: 36,
-    paddingBottom: 5,
-    textAlign: 'center',
-    color: '#2a4d69',
-  }
-});
+export default function App() {
+    const [items, setItems] = useState([]) as any;
+
+    return (
+        <SafeAreaView style={Base.base}>
+            <NavigationContainer>
+                <Tab.Navigator screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        let iconName = routeIcons[route.name] || "alert";
+
+                        return <Ionicons name={iconName} size={size} color={color} />
+                    },
+                    tabBarActiveTintColor: '#2a4d69',
+                    tabBarInactiveTintColor: 'gray',
+                    headerShown: false,
+                })}>
+                    <Tab.Screen name="Lager">
+                        {(props) => <Home {...props} items={items} setItems={setItems} />}
+                    </Tab.Screen>
+                    <Tab.Screen name="Plock">
+                        {(props) => <Pick {...props} items={items} setItems={setItems} />}
+                    </Tab.Screen>
+                </Tab.Navigator>
+            </NavigationContainer>
+            <StatusBar style="auto" />
+        </SafeAreaView>
+    );
+}
